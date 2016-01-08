@@ -46,5 +46,7 @@ func main() {
 
 will produce
 
+![basic](https://raw.githubusercontent.com/n0rad/go-erlog/master/docs/basic.png)
+
 advanced :
 

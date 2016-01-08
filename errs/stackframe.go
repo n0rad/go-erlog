@@ -12,13 +12,13 @@ import (
 // in a callstack.
 type StackFrame struct {
 	// The path to the file containing this ProgramCounter
-	File           string
+	File string
 	// The LineNumber in that file
-	LineNumber     int
+	LineNumber int
 	// The Name of the function that contains this ProgramCounter
-	Name           string
+	Name string
 	// The Package that contains this function
-	Package        string
+	Package string
 	// The underlying ProgramCounter
 	ProgramCounter uintptr
 }
@@ -73,7 +73,7 @@ func (frame *StackFrame) SourceLine() (string, error) {
 		return "???", nil
 	}
 	// -1 because line-numbers are 1 based, but our array is 0 based
-	return string(bytes.Trim(lines[frame.LineNumber - 1], " \t")), nil
+	return string(bytes.Trim(lines[frame.LineNumber-1], " \t")), nil
 }
 
 func packageAndName(fn *runtime.Func) (string, string) {
@@ -90,11 +90,11 @@ func packageAndName(fn *runtime.Func) (string, string) {
 	// we first remove the path prefix if there is one.
 	if lastslash := strings.LastIndex(name, "/"); lastslash >= 0 {
 		pkg += name[:lastslash] + "/"
-		name = name[lastslash + 1:]
+		name = name[lastslash+1:]
 	}
 	if period := strings.Index(name, "."); period >= 0 {
 		pkg += name[:period]
-		name = name[period + 1:]
+		name = name[period+1:]
 	}
 
 	name = strings.Replace(name, "·", ".", -1)

@@ -1,8 +1,8 @@
 package log
 
 import (
-	"testing"
 	o "github.com/onsi/gomega"
+	"testing"
 )
 
 func TestLevelStringConversion(t *testing.T) {

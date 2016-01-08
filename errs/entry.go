@@ -1,18 +1,19 @@
 package errs
+
 import (
-	"github.com/n0rad/go-erlog/with"
-	"github.com/n0rad/go-erlog/log"
 	"bytes"
 	"fmt"
+	"github.com/n0rad/go-erlog/log"
+	"github.com/n0rad/go-erlog/with"
 	"runtime"
 )
 
 var MaxStackDepth = 50
 
 type EntryError struct {
-	Fields  with.Data
-	Msg string
-	Source  error
+	Fields with.Data
+	Msg    string
+	Source error
 	stack  []uintptr
 	frames []StackFrame
 }
@@ -66,8 +67,8 @@ func ToLog(err error) {
 	if e, ok := err.(*EntryError); ok {
 		log.LogEntry(&log.Entry{
 			Message: e.Msg,
-			Fields: e.Fields,
-			Level:log.WARN})
+			Fields:  e.Fields,
+			Level:   log.WARN})
 		if e.Source != nil {
 			ToLog(e.Source)
 		}
@@ -120,4 +121,3 @@ func (e *EntryError) WithErr(err error) *EntryError {
 	e.Source = err
 	return e
 }
-

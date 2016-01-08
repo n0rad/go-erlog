@@ -1,4 +1,5 @@
 package erlog
+
 import (
 	"github.com/n0rad/go-erlog/log"
 )
@@ -8,4 +9,3 @@ type Appender interface {
 	GetLevel() log.Level
 	SetLevel(level log.Level)
 }
-

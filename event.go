@@ -1,8 +1,9 @@
 package erlog
+
 import (
 	"github.com/n0rad/go-erlog/log"
-	"time"
 	"runtime"
+	"time"
 )
 
 type LogEvent struct {
@@ -17,7 +18,7 @@ func NewLogEvent(entry *log.Entry) *LogEvent {
 	_, file, line, _ := runtime.Caller(4)
 	return &LogEvent{
 		Entry: *entry,
-		File: file,
-		Line: line,
+		File:  file,
+		Line:  line,
 	}
 }

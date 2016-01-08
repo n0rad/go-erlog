@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/mgutz/ansi"
+	"github.com/n0rad/go-erlog/log"
+	"io"
 	"runtime"
 	"sort"
 	"strings"
 	"time"
-"github.com/n0rad/go-erlog/log"
-	"io"
 )
 
 var pathSkip int = 0
@@ -30,10 +30,9 @@ var lvlColorTrace = ansi.ColorCode("blue")
 var lvlColorPanic = ansi.ColorCode(":red+h")
 
 type ErlogWriterAppender struct {
-	out io.Writer
+	out   io.Writer
 	level log.Level
 }
-
 
 func init() {
 	_, file, _, _ := runtime.Caller(0)
@@ -57,7 +56,7 @@ func (f *ErlogWriterAppender) GetLevel() log.Level {
 }
 
 func (f *ErlogWriterAppender) SetLevel(level log.Level) {
- 	f.level = level
+	f.level = level
 }
 
 func (f *ErlogWriterAppender) Fire(event *LogEvent) {
@@ -66,7 +65,7 @@ func (f *ErlogWriterAppender) Fire(event *LogEvent) {
 	level := f.textLevel(event.Level)
 
 	//	isColored := isTerminal && (runtime.GOOS != "windows")
-//	paths := strings.SplitN(event.File, "/", pathSkip+1)
+	//	paths := strings.SplitN(event.File, "/", pathSkip+1)
 
 	b := &bytes.Buffer{}
 	fmt.Fprintf(b, "%s %s%-5s%s %s%30s:%-3d%s %s%-44s%s",
@@ -75,7 +74,7 @@ func (f *ErlogWriterAppender) Fire(event *LogEvent) {
 		level,
 		reset,
 		f.fileColor(event.Level),
-//		f.reduceFilePath(paths[pathSkip], 30),
+		//		f.reduceFilePath(paths[pathSkip], 30),
 		event.File,
 		event.Line,
 		reset,

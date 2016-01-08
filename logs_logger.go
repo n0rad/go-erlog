@@ -1,11 +1,11 @@
 package erlog
+
 import (
-	"os"
 	"github.com/n0rad/go-erlog/log"
+	"os"
 )
 
-
-type ErrLogsFactory struct {}
+type ErrLogsFactory struct{}
 
 func (*ErrLogsFactory) GetLog(name string) log.Log {
 	return NewLog()
@@ -86,13 +86,11 @@ func (l ErrLogsLogger) SetLevel(level log.Level) {
 	l.Level = level // TODO this will not work
 }
 
-func (l ErrLogsLogger) IsTraceEnabled() bool { return log.TRACE.IsEnableFor(l.Level)}
-func (l ErrLogsLogger) IsDebugEnabled() bool { return log.DEBUG.IsEnableFor(l.Level)}
-func (l ErrLogsLogger) IsInfoEnabled() bool { return log.INFO.IsEnableFor(l.Level)}
-func (l ErrLogsLogger) IsWarnEnabled() bool { return log.WARN.IsEnableFor(l.Level)}
-func (l ErrLogsLogger) IsErrorEnabled() bool { return log.ERROR.IsEnableFor(l.Level)}
-func (l ErrLogsLogger) IsPanicEnabled() bool { return log.PANIC.IsEnableFor(l.Level)}
-func (l ErrLogsLogger) IsFatalEnabled() bool { return log.FATAL.IsEnableFor(l.Level)}
-func (l ErrLogsLogger) IsLevelEnabled(level log.Level) bool { return level.IsEnableFor(l.Level)}
-
-
+func (l ErrLogsLogger) IsTraceEnabled() bool                { return log.TRACE.IsEnableFor(l.Level) }
+func (l ErrLogsLogger) IsDebugEnabled() bool                { return log.DEBUG.IsEnableFor(l.Level) }
+func (l ErrLogsLogger) IsInfoEnabled() bool                 { return log.INFO.IsEnableFor(l.Level) }
+func (l ErrLogsLogger) IsWarnEnabled() bool                 { return log.WARN.IsEnableFor(l.Level) }
+func (l ErrLogsLogger) IsErrorEnabled() bool                { return log.ERROR.IsEnableFor(l.Level) }
+func (l ErrLogsLogger) IsPanicEnabled() bool                { return log.PANIC.IsEnableFor(l.Level) }
+func (l ErrLogsLogger) IsFatalEnabled() bool                { return log.FATAL.IsEnableFor(l.Level) }
+func (l ErrLogsLogger) IsLevelEnabled(level log.Level) bool { return level.IsEnableFor(l.Level) }

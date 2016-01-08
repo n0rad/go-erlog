@@ -1,4 +1,5 @@
 package log
+
 import "github.com/n0rad/go-erlog/with"
 
 type Entry struct {

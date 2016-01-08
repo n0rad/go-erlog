@@ -1,4 +1,5 @@
 package main
+
 import (
 	"github.com/n0rad/go-erlog/log"
 )
@@ -12,10 +13,9 @@ func main() {
 	log.Error("I'm error")
 
 	func() {
-		defer func() {recover()}()
-		func() {log.Panic("I'm panic")}()
+		defer func() { recover() }()
+		func() { log.Panic("I'm panic") }()
 	}()
 
 	log.Fatal("I'm fatal")
 }
-

@@ -1,25 +1,26 @@
 package log
+
 import (
-	"strings"
 	"fmt"
+	"strings"
 )
 
 type Level uint8
 
 const (
-// the program cannot continue. will log and exit(1)
+	// the program cannot continue. will log and exit(1)
 	FATAL Level = iota
-// the routine cannot continue. will log and call go panic function
+	// the routine cannot continue. will log and call go panic function
 	PANIC
-// program continue but caller have received error or data lost or similar
+	// program continue but caller have received error or data lost or similar
 	ERROR
-// recovered problem or non critical
+	// recovered problem or non critical
 	WARN
-// general info
+	// general info
 	INFO
-// tell what is going on step by step
+	// tell what is going on step by step
 	DEBUG
-// log data content
+	// log data content
 	TRACE
 )
 

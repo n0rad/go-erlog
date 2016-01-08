@@ -1,9 +1,9 @@
 package with
-import (
-	"testing"
-	o "github.com/onsi/gomega"
-)
 
+import (
+	o "github.com/onsi/gomega"
+	"testing"
+)
 
 type Options struct {
 	Paginate bool
@@ -21,7 +21,7 @@ func (o Options) ToFields() Fields {
 
 func TestWithAllInterface(t *testing.T) {
 	o.RegisterTestingT(t)
-	ops := &Options{Paginate: true, Count: 42, MaxPages:3}
+	ops := &Options{Paginate: true, Count: 42, MaxPages: 3}
 	with := Fields(ops)
 
 	o.Expect(with).To(o.HaveLen(3))

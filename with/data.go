@@ -13,7 +13,7 @@ func Field(key string, value interface{}) Data {
 
 func Fields(fields FieldsConverter) Data {
 	toFields := fields.ToFields()
-	i := make(Data, len(toFields) + 1)
+	i := make(Data, len(toFields)+1)
 	return i.WithAll(toFields)
 }
 

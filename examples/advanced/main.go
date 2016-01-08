@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/n0rad/go-erlog"
+	_ "github.com/n0rad/go-erlog/register"
 	"github.com/n0rad/go-erlog/log"
 	"github.com/n0rad/go-erlog/with"
 	"os"

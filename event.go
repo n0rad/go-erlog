@@ -4,6 +4,7 @@ import (
 	"github.com/n0rad/go-erlog/log"
 	"runtime"
 	"time"
+	"strings"
 )
 
 type LogEvent struct {
@@ -15,7 +16,16 @@ type LogEvent struct {
 }
 
 func NewLogEvent(entry *log.Entry) *LogEvent {
-	_, file, line, _ := runtime.Caller(4)
+
+	var file string
+	var line int
+	for i := 3; ; i++ {
+		_, file, line, _ = runtime.Caller(i)
+		if !strings.Contains(file, "n0rad/go-erlog/log") {
+			break
+		}
+	}
+
 	return &LogEvent{
 		Entry: *entry,
 		File:  file,

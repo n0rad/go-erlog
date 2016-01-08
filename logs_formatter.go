@@ -65,7 +65,7 @@ func (f *ErlogWriterAppender) Fire(event *LogEvent) {
 	level := f.textLevel(event.Level)
 
 	//	isColored := isTerminal && (runtime.GOOS != "windows")
-	//	paths := strings.SplitN(event.File, "/", pathSkip+1)
+	paths := strings.SplitN(event.File, "/", pathSkip + 1)
 
 	b := &bytes.Buffer{}
 	fmt.Fprintf(b, "%s %s%-5s%s %s%30s:%-3d%s %s%-44s%s",
@@ -74,8 +74,7 @@ func (f *ErlogWriterAppender) Fire(event *LogEvent) {
 		level,
 		reset,
 		f.fileColor(event.Level),
-		//		f.reduceFilePath(paths[pathSkip], 30),
-		event.File,
+		f.reduceFilePath(paths[pathSkip], 30),
 		event.Line,
 		reset,
 		f.textColor(event.Level),
@@ -100,13 +99,13 @@ func (f *ErlogWriterAppender) reduceFilePath(path string, max int) string {
 	reducedSize := len(path)
 	var buffer bytes.Buffer
 	for i, e := range split {
-		if reducedSize > max && i+1 < splitlen {
+		if reducedSize > max && i + 1 < splitlen {
 			buffer.WriteByte(e[0])
 			reducedSize -= len(e) - 1
 		} else {
 			buffer.WriteString(e)
 		}
-		if i+1 < splitlen {
+		if i + 1 < splitlen {
 			buffer.WriteByte('/')
 		}
 	}
@@ -183,9 +182,9 @@ func (f *ErlogWriterAppender) levelColor(level log.Level) string {
 func needsQuoting(text string) bool {
 	for _, ch := range text {
 		if !((ch >= 'a' && ch <= 'z') ||
-			(ch >= 'A' && ch <= 'Z') ||
-			(ch >= '0' && ch <= '9') ||
-			ch == '-' || ch == '.') {
+		(ch >= 'A' && ch <= 'Z') ||
+		(ch >= '0' && ch <= '9') ||
+		ch == '-' || ch == '.') {
 			return false
 		}
 	}

@@ -80,7 +80,7 @@ func (l *ErlogLogger) Panic(message string) {
 	panic(message)
 }
 func (l *ErlogLogger) Fatal(message string) {
-	if l.Level.IsEnableFor(log.FATAL) {
+	if log.FATAL.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(&log.Entry{Level: log.FATAL, Message: message}))
 	}
 	os.Exit(1)

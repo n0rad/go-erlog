@@ -5,69 +5,87 @@ import (
 	"os"
 )
 
-type ErrLogsFactory struct{}
-
-func (*ErrLogsFactory) GetLog(name string) log.Log {
-	return NewLog()
+type ErlogFactory struct{
+	defaultLog *ErlogLogger
+	logs map[string]*ErlogLogger
 }
 
-type ErrLogsLogger struct {
+func NewErlogFactory() *ErlogFactory {
+	return &ErlogFactory{
+		defaultLog: newLog(),
+		logs: make(map[string]*ErlogLogger, 10),
+	}
+}
+
+func (l *ErlogFactory) GetLog(name string) log.Log {
+	if name == "" {
+		return l.defaultLog
+	}
+	log := l.logs[name]
+	if log == nil {
+		log = newLog()
+		l.logs[name] = log
+	}
+	return log
+}
+
+type ErlogLogger struct {
 	appenders []Appender
 	Level     log.Level
 }
 
-func NewLog() *ErrLogsLogger {
-	return &ErrLogsLogger{
+func newLog() *ErlogLogger {
+	return &ErlogLogger{
 		appenders: []Appender{NewErlogWriterAppender(os.Stderr)},
 		Level:     log.INFO,
 	}
 }
 
-func (l ErrLogsLogger) log(event *LogEvent) {
+func (l *ErlogLogger) log(event *LogEvent) {
 	for _, appender := range l.appenders {
 		appender.Fire(event)
 	}
 }
 
-func (l ErrLogsLogger) Trace(message string) {
-	if l.Level.IsEnableFor(log.TRACE) {
+func (l *ErlogLogger) Trace(message string) {
+	if log.TRACE.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(&log.Entry{Level: log.TRACE, Message: message}))
 	}
 }
 
-func (l ErrLogsLogger) Debug(message string) {
-	if l.Level.IsEnableFor(log.DEBUG) {
+func (l *ErlogLogger) Debug(message string) {
+	if log.DEBUG.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(&log.Entry{Level: log.DEBUG, Message: message}))
 	}
 }
-func (l ErrLogsLogger) Info(message string) {
-	if l.Level.IsEnableFor(log.INFO) {
+func (l *ErlogLogger) Info(message string) {
+	if log.INFO.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(&log.Entry{Level: log.INFO, Message: message}))
 	}
 }
-func (l ErrLogsLogger) Warn(message string) {
-	if l.Level.IsEnableFor(log.WARN) {
+func (l *ErlogLogger) Warn(message string) {
+	if log.WARN.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(&log.Entry{Level: log.WARN, Message: message}))
 	}
 }
-func (l ErrLogsLogger) Error(message string) {
-	if l.Level.IsEnableFor(log.ERROR) {
+func (l *ErlogLogger) Error(message string) {
+	if log.ERROR.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(&log.Entry{Level: log.ERROR, Message: message}))
 	}
 }
-func (l ErrLogsLogger) Panic(message string) {
-	if l.Level.IsEnableFor(log.PANIC) {
+func (l *ErlogLogger) Panic(message string) {
+	if log.PANIC.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(&log.Entry{Level: log.PANIC, Message: message}))
 	}
 	panic(message)
 }
-func (l ErrLogsLogger) Fatal(message string) {
+func (l *ErlogLogger) Fatal(message string) {
 	if l.Level.IsEnableFor(log.FATAL) {
 		l.log(NewLogEvent(&log.Entry{Level: log.FATAL, Message: message}))
 	}
 	os.Exit(1)
 }
-func (l ErrLogsLogger) LogEntry(entry *log.Entry) {
+func (l *ErlogLogger) LogEntry(entry *log.Entry) {
 	if l.Level.IsEnableFor(entry.Level) {
 		l.log(NewLogEvent(entry))
 	}
@@ -78,19 +96,14 @@ func (l ErrLogsLogger) LogEntry(entry *log.Entry) {
 	}
 }
 
-func (l ErrLogsLogger) GetLevel() log.Level {
-	return l.Level
-}
+func (l *ErlogLogger) GetLevel() log.Level {return l.Level}
+func (l *ErlogLogger) SetLevel(level log.Level) {l.Level = level}
 
-func (l ErrLogsLogger) SetLevel(level log.Level) {
-	l.Level = level // TODO this will not work
-}
-
-func (l ErrLogsLogger) IsTraceEnabled() bool                { return log.TRACE.IsEnableFor(l.Level) }
-func (l ErrLogsLogger) IsDebugEnabled() bool                { return log.DEBUG.IsEnableFor(l.Level) }
-func (l ErrLogsLogger) IsInfoEnabled() bool                 { return log.INFO.IsEnableFor(l.Level) }
-func (l ErrLogsLogger) IsWarnEnabled() bool                 { return log.WARN.IsEnableFor(l.Level) }
-func (l ErrLogsLogger) IsErrorEnabled() bool                { return log.ERROR.IsEnableFor(l.Level) }
-func (l ErrLogsLogger) IsPanicEnabled() bool                { return log.PANIC.IsEnableFor(l.Level) }
-func (l ErrLogsLogger) IsFatalEnabled() bool                { return log.FATAL.IsEnableFor(l.Level) }
-func (l ErrLogsLogger) IsLevelEnabled(level log.Level) bool { return level.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsTraceEnabled() bool                { return log.TRACE.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsDebugEnabled() bool                { return log.DEBUG.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsInfoEnabled() bool                 { return log.INFO.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsWarnEnabled() bool                 { return log.WARN.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsErrorEnabled() bool                { return log.ERROR.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsPanicEnabled() bool                { return log.PANIC.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsFatalEnabled() bool                { return log.FATAL.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsLevelEnabled(level log.Level) bool { return level.IsEnableFor(l.Level) }

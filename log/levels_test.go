@@ -18,6 +18,8 @@ func TestLevelStringConversion(t *testing.T) {
 func TestLevelEnableFor(t *testing.T) {
 	o.RegisterTestingT(t)
 
+	o.Expect(PANIC.IsEnableFor(WARN)).To(o.BeTrue())
+	o.Expect(FATAL.IsEnableFor(WARN)).To(o.BeTrue())
 	o.Expect(ERROR.IsEnableFor(WARN)).To(o.BeTrue())
 	o.Expect(WARN.IsEnableFor(WARN)).To(o.BeTrue())
 	o.Expect(INFO.IsEnableFor(WARN)).To(o.BeFalse())

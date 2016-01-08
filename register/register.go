@@ -6,5 +6,5 @@ import (
 )
 
 func init() {
-	log.RegisterLoggerFactory(&erlog.ErrLogsFactory{})
+	log.RegisterLoggerFactory(erlog.NewErlogFactory())
 }

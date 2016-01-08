@@ -1,11 +1,13 @@
 package main
 
 import (
-	"github.com/n0rad/go-erlog/log"
+"github.com/n0rad/go-erlog/log" // the api
+_ "github.com/n0rad/go-erlog/register" // use erlog implementation, with default appender (colored to stderr)
 )
 
-// go-erlog/log is an api, by default it uses a very basic dummy logger
 func main() {
+	log.SetLevel(log.TRACE) // default is INFO
+
 	log.Trace("I'm trace")
 	log.Debug("I'm debug")
 	log.Info("I'm info")

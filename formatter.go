@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"sync"
 )
 
 var pathSkip int = 0
@@ -30,8 +31,9 @@ var lvlColorTrace = ansi.ColorCode("blue")
 var lvlColorPanic = ansi.ColorCode(":red+h")
 
 type ErlogWriterAppender struct {
-	out   io.Writer
-	level log.Level
+	Out   io.Writer
+	Level log.Level
+	mu sync.Mutex
 }
 
 func init() {
@@ -47,16 +49,16 @@ func init() {
 
 func NewErlogWriterAppender(writer io.Writer) (f *ErlogWriterAppender) {
 	return &ErlogWriterAppender{
-		out: writer,
+		Out: writer,
 	}
 }
 
 func (f *ErlogWriterAppender) GetLevel() log.Level {
-	return f.level
+	return f.Level
 }
 
 func (f *ErlogWriterAppender) SetLevel(level log.Level) {
-	f.level = level
+	f.Level = level
 }
 
 func (f *ErlogWriterAppender) Fire(event *LogEvent) {
@@ -86,7 +88,9 @@ func (f *ErlogWriterAppender) Fire(event *LogEvent) {
 	}
 	b.WriteByte('\n')
 
-	f.out.Write(b.Bytes())
+//	f.mu.Lock() //TODO
+	f.Out.Write(b.Bytes())
+//	f.mu.Unlock()
 }
 
 func (f *ErlogWriterAppender) reduceFilePath(path string, max int) string {

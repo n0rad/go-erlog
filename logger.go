@@ -30,19 +30,19 @@ func (l *ErlogFactory) GetLog(name string) log.Log {
 }
 
 type ErlogLogger struct {
-	appenders []Appender
+	Appenders []Appender
 	Level     log.Level
 }
 
 func newLog() *ErlogLogger {
 	return &ErlogLogger{
-		appenders: []Appender{NewErlogWriterAppender(os.Stderr)},
+		Appenders: []Appender{NewErlogWriterAppender(os.Stderr)},
 		Level:     log.INFO,
 	}
 }
 
 func (l *ErlogLogger) log(event *LogEvent) {
-	for _, appender := range l.appenders {
+	for _, appender := range l.Appenders {
 		appender.Fire(event)
 	}
 }
@@ -86,7 +86,7 @@ func (l *ErlogLogger) Fatal(message string) {
 	os.Exit(1)
 }
 func (l *ErlogLogger) LogEntry(entry *log.Entry) {
-	if l.Level.IsEnableFor(entry.Level) {
+	if entry.Level.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(entry))
 	}
 	if entry.Level == log.PANIC {

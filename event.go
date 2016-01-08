@@ -16,12 +16,19 @@ type LogEvent struct {
 }
 
 func NewLogEvent(entry *log.Entry) *LogEvent {
-
 	var file string
 	var line int
-	for i := 3; ; i++ {
-		_, file, line, _ = runtime.Caller(i)
-		if !strings.Contains(file, "n0rad/go-erlog/log") {
+	var ok bool
+	for i := 2; ; i++ {
+		_, file, line, ok = runtime.Caller(i)
+		if !ok {
+			file = "???"
+			line = 0
+		}
+		if !strings.Contains(file, "n0rad/go-erlog") {
+			break
+		}
+		if strings.Contains(file, "n0rad/go-erlog/examples") { // TODO what to do with that ?
 			break
 		}
 	}

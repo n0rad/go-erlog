@@ -5,12 +5,18 @@ import (
 	"github.com/n0rad/go-erlog/log"
 	"github.com/n0rad/go-erlog/with"
 	"os"
+	"github.com/n0rad/go-erlog"
 )
 
 func main() {
+	logger := log.GetLog("newlog") // another logger
+
+	logger.(*erlog.ErlogLogger).Appenders[0].(*erlog.ErlogWriterAppender).Out = os.Stdout
+
+
 	path := "/toto/config"
 	if err := os.Mkdir(path, 0777); err != nil {
-		log.LogEntry(&log.Entry{
+		logger.LogEntry(&log.Entry{
 			Fields:  with.Field("dir", path),
 			Level:   log.INFO,
 			Error:   err,
@@ -18,7 +24,7 @@ func main() {
 		})
 	}
 
-	log.GetDefaultLog().Info("Salut !2")
-	log.GetLog("other").Info("Salut !3")
+	logger.Info("Salut !2")
+	logger.Info("Salut !3")
 
 }

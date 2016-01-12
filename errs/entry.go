@@ -43,17 +43,24 @@ func Fill(entry *EntryError) *EntryError {
 	return entry
 }
 
+func FromF(fields with.Data, msg string) *EntryError {
+	return Fill(&EntryError{
+		Fields:  fields,
+		Message: msg,
+	})
+}
+
 func FromE(err error, msg string) *EntryError {
 	return Fill(&EntryError{
-		Err:err,
+		Err:     err,
 		Message: msg,
 	})
 }
 
 func FromEF(err error, fields with.Data, msg string) *EntryError {
 	return Fill(&EntryError{
-		Err:err,
-		Fields: fields,
+		Err:     err,
+		Fields:  fields,
 		Message: msg,
 	})
 }
@@ -78,13 +85,13 @@ func Is(e1 error, e2 error) bool {
 	return false
 }
 
-func ToFatal(err error) {toLog(err, log.FATAL)}
-func ToPanic(err error) {toLog(err, log.PANIC)}
-func ToError(err error) {toLog(err, log.ERROR)}
-func ToWarn(err error) {toLog(err, log.WARN)}
-func ToInfo(err error) {toLog(err, log.INFO)}
-func ToDebug(err error) {toLog(err, log.DEBUG)}
-func ToTrace(err error) {toLog(err, log.TRACE)}
+func ToFatal(err error) { toLog(err, log.FATAL) }
+func ToPanic(err error) { toLog(err, log.PANIC) }
+func ToError(err error) { toLog(err, log.ERROR) }
+func ToWarn(err error)  { toLog(err, log.WARN) }
+func ToInfo(err error)  { toLog(err, log.INFO) }
+func ToDebug(err error) { toLog(err, log.DEBUG) }
+func ToTrace(err error) { toLog(err, log.TRACE) }
 
 func toLog(err error, level log.Level) {
 	if e, ok := err.(*EntryError); ok {
@@ -98,7 +105,7 @@ func toLog(err error, level log.Level) {
 	} else {
 		log.LogEntry(&log.Entry{
 			Message: err.Error(),
-			Level: level,
+			Level:   level,
 		})
 	}
 }
@@ -114,7 +121,6 @@ func (e *EntryError) WithErr(err error) *EntryError {
 	e.Err = err
 	return e
 }
-
 
 func (e *EntryError) WithField(name string, value interface{}) *EntryError {
 	if e.Fields == nil {
@@ -149,6 +155,7 @@ func (e *EntryError) Error() string {
 	}
 	return buffer.String()
 }
+
 //
 //func (e *EntryError) Stack() []byte {
 //	buf := bytes.Buffer{}

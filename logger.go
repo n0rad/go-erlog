@@ -1,10 +1,10 @@
 package erlog
 
 import (
+	"fmt"
 	"github.com/n0rad/go-erlog/log"
 	"os"
 	"strings"
-	"fmt"
 )
 
 type ErlogFactory struct {
@@ -15,7 +15,7 @@ type ErlogFactory struct {
 func NewErlogFactory() *ErlogFactory {
 	return &ErlogFactory{
 		defaultLog: newLog(),
-		logs: make(map[string]*ErlogLogger, 10),
+		logs:       make(map[string]*ErlogLogger, 10),
 	}
 }
 
@@ -147,14 +147,14 @@ func (l *ErlogLogger) LogEntry(entry *log.Entry) {
 	}
 }
 
-func (l *ErlogLogger) GetLevel() log.Level {return l.Level}
-func (l *ErlogLogger) SetLevel(level log.Level) {l.Level = level}
+func (l *ErlogLogger) GetLevel() log.Level      { return l.Level }
+func (l *ErlogLogger) SetLevel(level log.Level) { l.Level = level }
 
-func (l *ErlogLogger) IsTraceEnabled() bool { return log.TRACE.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsDebugEnabled() bool { return log.DEBUG.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsInfoEnabled() bool { return log.INFO.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsWarnEnabled() bool { return log.WARN.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsErrorEnabled() bool { return log.ERROR.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsPanicEnabled() bool { return log.PANIC.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsFatalEnabled() bool { return log.FATAL.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsTraceEnabled() bool                { return log.TRACE.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsDebugEnabled() bool                { return log.DEBUG.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsInfoEnabled() bool                 { return log.INFO.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsWarnEnabled() bool                 { return log.WARN.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsErrorEnabled() bool                { return log.ERROR.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsPanicEnabled() bool                { return log.PANIC.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsFatalEnabled() bool                { return log.FATAL.IsEnableFor(l.Level) }
 func (l *ErlogLogger) IsLevelEnabled(level log.Level) bool { return level.IsEnableFor(l.Level) }

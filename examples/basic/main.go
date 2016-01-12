@@ -1,8 +1,8 @@
 package main
 
 import (
-"github.com/n0rad/go-erlog/log" // the api
-_ "github.com/n0rad/go-erlog/register" // use erlog implementation, with default appender (colored to stderr)
+	"github.com/n0rad/go-erlog/log"        // the api
+	_ "github.com/n0rad/go-erlog/register" // use erlog implementation, with default appender (colored to stderr)
 )
 
 func main() {

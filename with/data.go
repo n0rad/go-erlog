@@ -12,19 +12,27 @@ func Field(key string, value interface{}) Data {
 }
 
 func Fields(fields FieldsConverter) Data {
-	toFields := fields.ToFields()
-	i := make(Data, len(toFields)+1)
-	return i.WithAll(toFields)
+	return fields.ToFields()
 }
 
-func (f Data) With(key string, value interface{}) Data {
-	f[key] = value
-	return f
+func (f *Data) With(key string, value interface{}) Data {
+	n := f.Copy()
+	n[key] = value
+	return n
 }
 
-func (f Data) WithAll(data Data) Data {
+func (f *Data) WithAll(data Data) Data {
+	n := f.Copy()
 	for k, v := range data {
-		f[k] = v
+		n[k] = v
 	}
-	return f
+	return n
+}
+
+func (f *Data) Copy() Data {
+	data := Data{}
+	for k, v := range (*f) {
+		data[k] = v
+	}
+	return data
 }

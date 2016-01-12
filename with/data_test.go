@@ -7,12 +7,12 @@ import (
 
 type Options struct {
 	Paginate bool
-	Count    uint
-	MaxPages uint
+	Count    int
+	MaxPages int
 }
 
-func (o Options) ToFields() Fields {
-	fields := make(Fields, 3)
+func (o Options) ToFields() Data {
+	fields := make(Data, 3)
 	fields["paginate"] = o.Paginate
 	fields["count"] = o.Count
 	fields["maxpages"] = o.MaxPages
@@ -25,9 +25,9 @@ func TestWithAllInterface(t *testing.T) {
 	with := Fields(ops)
 
 	o.Expect(with).To(o.HaveLen(3))
-	o.Expect(with).To(o.HaveKeyWithValue("paginate", true))
-	o.Expect(with).To(o.HaveKeyWithValue("count", 42))
-	o.Expect(with).To(o.HaveKeyWithValue("maxpages", 3))
+	o.Expect(with["paginate"]).To(o.Equal(true))
+	o.Expect(with["count"]).To(o.Equal(42))
+	o.Expect(with["maxpages"]).To(o.Equal(3))
 }
 
 func TestWith(t *testing.T) {

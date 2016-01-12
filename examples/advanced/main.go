@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "github.com/n0rad/go-erlog/register"
+	"github.com/n0rad/go-erlog"
 	"github.com/n0rad/go-erlog/log"
+	_ "github.com/n0rad/go-erlog/register"
 	"github.com/n0rad/go-erlog/with"
 	"os"
-	"github.com/n0rad/go-erlog"
 )
 
 func main() {
@@ -13,15 +13,14 @@ func main() {
 
 	logger.(*erlog.ErlogLogger).Appenders[0].(*erlog.ErlogWriterAppender).Out = os.Stdout
 
-
 	path := "/toto/config"
 	if err := os.Mkdir(path, 0777); err != nil {
-		logger.FromEF(err, with.Field("dir", path)).info("Salut !")
+		logger.FromEF(err, with.Field("dir", path)).Info("Failed to create config directory")
 
 		logger.LogEntry(&log.Entry{
 			Fields:  with.Field("dir", path),
 			Level:   log.INFO,
-			Err:   err,
+			Err:     err,
 			Message: "Salut !1",
 		})
 	}

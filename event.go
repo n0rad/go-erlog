@@ -3,8 +3,8 @@ package erlog
 import (
 	"github.com/n0rad/go-erlog/log"
 	"runtime"
-	"time"
 	"strings"
+	"time"
 )
 
 type LogEvent struct {

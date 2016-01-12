@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"sort"
 	"strings"
-	"time"
 	"sync"
+	"time"
 )
 
 var pathSkip int = 0
@@ -33,7 +33,7 @@ var lvlColorPanic = ansi.ColorCode(":red+h")
 type ErlogWriterAppender struct {
 	Out   io.Writer
 	Level log.Level
-	mu sync.Mutex
+	mu    sync.Mutex
 }
 
 func init() {
@@ -67,7 +67,7 @@ func (f *ErlogWriterAppender) Fire(event *LogEvent) {
 	level := f.textLevel(event.Level)
 
 	//	isColored := isTerminal && (runtime.GOOS != "windows")
-	paths := strings.SplitN(event.File, "/", pathSkip + 1)
+	paths := strings.SplitN(event.File, "/", pathSkip+1)
 
 	b := &bytes.Buffer{}
 	fmt.Fprintf(b, "%s %s%-5s%s %s%30s:%-3d%s %s%-44s%s",
@@ -88,9 +88,9 @@ func (f *ErlogWriterAppender) Fire(event *LogEvent) {
 	}
 	b.WriteByte('\n')
 
-//	f.mu.Lock() //TODO
+	//	f.mu.Lock() //TODO
 	f.Out.Write(b.Bytes())
-//	f.mu.Unlock()
+	//	f.mu.Unlock()
 }
 
 func (f *ErlogWriterAppender) reduceFilePath(path string, max int) string {
@@ -103,13 +103,13 @@ func (f *ErlogWriterAppender) reduceFilePath(path string, max int) string {
 	reducedSize := len(path)
 	var buffer bytes.Buffer
 	for i, e := range split {
-		if reducedSize > max && i + 1 < splitlen {
+		if reducedSize > max && i+1 < splitlen {
 			buffer.WriteByte(e[0])
 			reducedSize -= len(e) - 1
 		} else {
 			buffer.WriteString(e)
 		}
-		if i + 1 < splitlen {
+		if i+1 < splitlen {
 			buffer.WriteByte('/')
 		}
 	}
@@ -159,7 +159,7 @@ func (f *ErlogWriterAppender) textColor(level log.Level) string {
 
 func (f *ErlogWriterAppender) timeColor(level log.Level) func(string) string {
 	switch level {
-	case log.DEBUG, log.INFO:
+	case log.DEBUG, log.INFO, log.TRACE:
 		return timeColorFail
 	default:
 		return timeColorNormal
@@ -186,9 +186,9 @@ func (f *ErlogWriterAppender) levelColor(level log.Level) string {
 func needsQuoting(text string) bool {
 	for _, ch := range text {
 		if !((ch >= 'a' && ch <= 'z') ||
-		(ch >= 'A' && ch <= 'Z') ||
-		(ch >= '0' && ch <= '9') ||
-		ch == '-' || ch == '.') {
+			(ch >= 'A' && ch <= 'Z') ||
+			(ch >= '0' && ch <= '9') ||
+			ch == '-' || ch == '.') {
 			return false
 		}
 	}

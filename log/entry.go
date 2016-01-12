@@ -12,20 +12,41 @@ type Entry struct {
 	Err     error
 }
 
-func WithFields(fields with.Data) *Entry {
+func WithFields(fields with.Data) *Entry { // TODO merge with From??
 	return &Entry{
 		Logger: GetDefaultLog(),
 		Fields: fields,
 	}
 }
 
-func WithField(key string, value interface{}) *Entry {
+func WithField(key string, value interface{}) *Entry { // TODO merge with From??
 	return &Entry{
 		Logger: GetDefaultLog(),
 		Fields: with.Field(key, value),
 	}
 }
 
+func FromF(fields with.Data) *Entry {
+	return &Entry{
+		Logger: GetDefaultLog(),
+		Fields: fields,
+	}
+}
+
+func FromEF(err error, fields with.Data) *Entry {
+	return &Entry{
+		Logger: GetDefaultLog(),
+		Err: err,
+		Fields: fields,
+	}
+}
+
+func FromE(err error) *Entry {
+	return &Entry{
+		Logger: GetDefaultLog(),
+		Err: err,
+	}
+}
 
 ///////////////////////////////////
 
@@ -40,6 +61,11 @@ func (e *Entry) WithField(name string, value interface{}) *Entry {
 	} else {
 		e.Fields = e.Fields.With(name, value)
 	}
+	return e
+}
+
+func (e *Entry) WithLog(logger Log) *Entry {
+	e.Logger = logger
 	return e
 }
 

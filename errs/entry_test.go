@@ -1,10 +1,10 @@
 package errs
 
 import (
-	"testing"
-	o "github.com/onsi/gomega"
 	"fmt"
 	"github.com/n0rad/go-erlog/with"
+	o "github.com/onsi/gomega"
+	"testing"
 )
 
 func TestConstruction(t *testing.T) {
@@ -18,8 +18,8 @@ func TestConstruction(t *testing.T) {
 	err3 := WithMessage("salut").WithErr(err).WithField("path", path)
 	err4 := Fill(&EntryError{
 		Message: "salut",
-		Fields: with.Field("path", path),
-		Err: err,
+		Fields:  with.Field("path", path),
+		Err:     err,
 	})
 
 	o.Expect(Is(err1, err2)).To(o.BeTrue())

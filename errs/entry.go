@@ -11,23 +11,29 @@ import (
 var MaxStackDepth = 50
 
 type EntryError struct {
-	Fields with.Data
-	Msg    string
-	Source error
-	stack  []uintptr
-	frames []StackFrame
+	Fields  with.Data
+	Message string
+	Err     error
+	stack   []uintptr
+	frames  []StackFrame
 }
 
-func From(err error) *EntryError {
-	return &EntryError{
-		Source: err,
-	}
+func WithSource(err error) *EntryError {
+	return Fill(&EntryError{
+		Err: err,
+	})
 }
 
 func WithField(name string, value interface{}) *EntryError {
-	return &EntryError{
+	return Fill(&EntryError{
 		Fields: with.Field(name, value),
-	}
+	})
+}
+
+func WithMessage(message string) *EntryError {
+	return Fill(&EntryError{
+		Message: message,
+	})
 }
 
 func Fill(entry *EntryError) *EntryError {
@@ -37,17 +43,78 @@ func Fill(entry *EntryError) *EntryError {
 	return entry
 }
 
-func New(message string) *EntryError {
-	entry := &EntryError{
-		Msg: message,
-	}
-	return entry
+func FromE(err error, msg string) *EntryError {
+	return Fill(&EntryError{
+		Err:err,
+		Message: msg,
+	})
 }
+
+func FromEF(err error, fields with.Data, msg string) *EntryError {
+	return Fill(&EntryError{
+		Err:err,
+		Fields: fields,
+		Message: msg,
+	})
+}
+
+///////////////////////////////////////////////
+
+func Is(e1 error, e2 error) bool {
+	if e1 == e2 {
+		return true
+	}
+
+	ee1, ok1 := e1.(*EntryError)
+	ee2, ok2 := e2.(*EntryError)
+	if ok1 && ok2 && ee1.Message == ee2.Message {
+		return true
+	}
+
+	if e1.Error() == e2.Error() {
+		return true
+	}
+
+	return false
+}
+
+func ToFatal(err error) {toLog(err, log.FATAL)}
+func ToPanic(err error) {toLog(err, log.PANIC)}
+func ToError(err error) {toLog(err, log.ERROR)}
+func ToWarn(err error) {toLog(err, log.WARN)}
+func ToInfo(err error) {toLog(err, log.INFO)}
+func ToDebug(err error) {toLog(err, log.DEBUG)}
+func ToTrace(err error) {toLog(err, log.TRACE)}
+
+func toLog(err error, level log.Level) {
+	if e, ok := err.(*EntryError); ok {
+		log.LogEntry(&log.Entry{
+			Message: e.Message,
+			Fields:  e.Fields,
+			Level:   level})
+		if e.Err != nil { // TODO this sux
+			toLog(e.Err, level)
+		}
+	} else {
+		log.LogEntry(&log.Entry{
+			Message: err.Error(),
+			Level: level,
+		})
+	}
+}
+
+//////////////////////////////////////////////
 
 func (e *EntryError) WithFields(data with.Data) *EntryError {
 	e.Fields = data
 	return e
 }
+
+func (e *EntryError) WithErr(err error) *EntryError {
+	e.Err = err
+	return e
+}
+
 
 func (e *EntryError) WithField(name string, value interface{}) *EntryError {
 	if e.Fields == nil {
@@ -58,28 +125,14 @@ func (e *EntryError) WithField(name string, value interface{}) *EntryError {
 	return e
 }
 
-func (e *EntryError) Message(msg string) *EntryError {
-	e.Msg = msg
+func (e *EntryError) WithMessage(msg string) *EntryError {
+	e.Message = msg
 	return e
-}
-
-func ToLog(err error) {
-	if e, ok := err.(*EntryError); ok {
-		log.LogEntry(&log.Entry{
-			Message: e.Msg,
-			Fields:  e.Fields,
-			Level:   log.WARN})
-		if e.Source != nil {
-			ToLog(e.Source)
-		}
-	} else {
-		log.Warn(err.Error())
-	}
 }
 
 func (e *EntryError) Error() string {
 	var buffer bytes.Buffer
-	buffer.WriteString(e.Msg)
+	buffer.WriteString(e.Message)
 	if e.Fields != nil {
 		for key := range e.Fields {
 			buffer.WriteString(" ")
@@ -89,35 +142,30 @@ func (e *EntryError) Error() string {
 		}
 	}
 	buffer.WriteString("\n")
-	if e.Source != nil {
+	if e.Err != nil {
 		buffer.WriteString("Caused by : ")
-		buffer.WriteString(e.Source.Error())
+		buffer.WriteString(e.Err.Error())
 		buffer.WriteString("\n")
 	}
 	return buffer.String()
 }
-
-func (e *EntryError) Stack() []byte {
-	buf := bytes.Buffer{}
-
-	for _, frame := range e.StackFrames() {
-		buf.WriteString(frame.String())
-	}
-
-	return buf.Bytes()
-}
-
-func (e *EntryError) StackFrames() []StackFrame {
-	if e.frames == nil {
-		e.frames = make([]StackFrame, len(e.stack))
-		for i, pc := range e.stack {
-			e.frames[i] = NewStackFrame(pc)
-		}
-	}
-	return e.frames
-}
-
-func (e *EntryError) WithErr(err error) *EntryError {
-	e.Source = err
-	return e
-}
+//
+//func (e *EntryError) Stack() []byte {
+//	buf := bytes.Buffer{}
+//
+//	for _, frame := range e.StackFrames() {
+//		buf.WriteString(frame.String())
+//	}
+//
+//	return buf.Bytes()
+//}
+//
+//func (e *EntryError) StackFrames() []StackFrame {
+//	if e.frames == nil {
+//		e.frames = make([]StackFrame, len(e.stack))
+//		for i, pc := range e.stack {
+//			e.frames[i] = NewStackFrame(pc)
+//		}
+//	}
+//	return e.frames
+//}

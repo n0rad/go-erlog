@@ -16,10 +16,12 @@ func main() {
 
 	path := "/toto/config"
 	if err := os.Mkdir(path, 0777); err != nil {
+		logger.FromEF(err, with.Field("dir", path)).info("Salut !")
+
 		logger.LogEntry(&log.Entry{
 			Fields:  with.Field("dir", path),
 			Level:   log.INFO,
-			Error:   err,
+			Err:   err,
 			Message: "Salut !1",
 		})
 	}

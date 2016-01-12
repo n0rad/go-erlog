@@ -1,5 +1,7 @@
 # Go erlog
 
+*this is experimental*
+
 In a fusion of logrus and go-errors logic with improvement to provide:
 - a logging api supporting fields and stacktrace
 - a logging implementation supporting multiple appenders

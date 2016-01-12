@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"runtime"
 	"sync"
+	"strings"
 )
 
 type LogFactory interface {
@@ -13,13 +14,22 @@ type LogFactory interface {
 }
 
 type Log interface {
-	Trace(msg string)
-	Debug(msg string)
-	Info(msg string)
-	Warn(msg string)
-	Error(msg string)
-	Panic(msg string)
-	Fatal(msg string)
+	Trace(msg ...string)
+	Debug(msg ...string)
+	Info(msg ...string)
+	Warn(msg ...string)
+	Error(msg ...string)
+	Panic(msg ...string)
+	Fatal(msg ...string)
+
+	Tracef(format string, msg ...interface{})
+	Debugf(format string, msg ...interface{})
+	Infof(format string, msg ...interface{})
+	Warnf(format string, msg ...interface{})
+	Errorf(format string, msg ...interface{})
+	Panicf(format string, msg ...interface{})
+	Fatalf(format string, msg ...interface{})
+
 	LogEntry(entry *Entry)
 
 	GetLevel() Level
@@ -55,13 +65,22 @@ func RegisterLoggerFactory(f LogFactory) {
 type DummyLog struct{}
 
 func (d *DummyLog) GetLog(name string) Log        { return d }
-func (d *DummyLog) Trace(msg string)              { d.LogEntry(&Entry{Level: TRACE, Message: msg}) }
-func (d *DummyLog) Debug(msg string)              { d.LogEntry(&Entry{Level: DEBUG, Message: msg}) }
-func (d *DummyLog) Info(msg string)               { d.LogEntry(&Entry{Level: INFO, Message: msg}) }
-func (d *DummyLog) Warn(msg string)               { d.LogEntry(&Entry{Level: WARN, Message: msg}) }
-func (d *DummyLog) Error(msg string)              { d.LogEntry(&Entry{Level: ERROR, Message: msg}) }
-func (d *DummyLog) Panic(msg string)              { d.LogEntry(&Entry{Level: PANIC, Message: msg}); panic(msg) }
-func (d *DummyLog) Fatal(msg string)              { d.LogEntry(&Entry{Level: FATAL, Message: msg}); os.Exit(1) }
+func (d *DummyLog) Tracef(format string, msg ...interface{}) { d.log(TRACE, fmt.Sprintf(format, msg...))}
+func (d *DummyLog) Debugf(format string, msg ...interface{}) { d.log(DEBUG, fmt.Sprintf(format, msg...))}
+func (d *DummyLog) Infof(format string, msg ...interface{}) { d.log(INFO, fmt.Sprintf(format, msg...))}
+func (d *DummyLog) Warnf(format string, msg ...interface{}) { d.log(WARN, fmt.Sprintf(format, msg...))}
+func (d *DummyLog) Errorf(format string, msg ...interface{}) { d.log(ERROR, fmt.Sprintf(format, msg...))}
+func (d *DummyLog) Panicf(format string, msg ...interface{}) { d.log(PANIC, fmt.Sprintf(format, msg...))}
+func (d *DummyLog) Fatalf(format string, msg ...interface{}) { d.log(FATAL, fmt.Sprintf(format, msg...))}
+
+func (d *DummyLog) Trace(msg ...string)              { d.log(TRACE, msg...) }
+func (d *DummyLog) Debug(msg ...string)              { d.log(DEBUG, msg...) }
+func (d *DummyLog) Info(msg ...string)               { d.log(INFO, msg...) }
+func (d *DummyLog) Warn(msg ...string)               { d.log(WARN, msg...) }
+func (d *DummyLog) Error(msg ...string)              { d.log(ERROR, msg...) }
+func (d *DummyLog) Panic(msg ...string)              { d.log(PANIC, msg...); panic(msg) }
+func (d *DummyLog) Fatal(msg ...string)              { d.log(FATAL, msg...); os.Exit(1) }
+func (d *DummyLog) log(level Level, msg ...string) { d.LogEntry(&Entry{Level: level, Message: strings.Join(msg, " ")}) }
 func (d *DummyLog) LogEntry(entry *Entry)         { fmt.Printf("%s: %s\n", entry.Level, entry.Message) }
 func (d *DummyLog) GetLevel() Level               { return TRACE }
 func (d *DummyLog) SetLevel(lvl Level)            { d.Error("Dummy log cannot set level") }

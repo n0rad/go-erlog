@@ -13,10 +13,10 @@ func TestConstruction(t *testing.T) {
 	path := "/bin/toto42"
 	err := fmt.Errorf("%s", "erf")
 
-	err1 := WithMessage("salut").WithErr(err).WithField("path", path)
+	err1 := With("salut").WithErr(err).WithField("path", path)
 	err2 := WithSource(err).WithMessage("salut").WithField("path", path)
-	err3 := WithMessage("salut").WithErr(err).WithField("path", path)
-	err4 := Fill(&EntryError{
+	err3 := With("salut").WithErr(err).WithField("path", path)
+	err4 := fill(&EntryError{
 		Message: "salut",
 		Fields:  with.Field("path", path),
 		Err:     err,

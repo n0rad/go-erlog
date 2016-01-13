@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-
 //func toLog(err error, level log.Level) {
 //	if e, ok := err.(*EntryError); ok {
 //		log.LogEntry(&log.Entry{
@@ -24,7 +23,6 @@ import (
 //		})
 //	}
 //}
-
 
 type ErlogFactory struct {
 	defaultLog *ErlogLogger

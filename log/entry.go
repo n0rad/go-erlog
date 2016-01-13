@@ -22,14 +22,14 @@ func WithF(fields with.Data) *Entry {
 func WithE(err error) *Entry {
 	return &Entry{
 		Logger: GetDefaultLog(),
-		Err: err,
+		Err:    err,
 	}
 }
 
 func WithEF(err error, fields with.Data) *Entry {
 	return &Entry{
 		Logger: GetDefaultLog(),
-		Err: err,
+		Err:    err,
 		Fields: fields,
 	}
 }

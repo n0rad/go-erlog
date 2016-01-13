@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/n0rad/go-erlog"
 	"github.com/n0rad/go-erlog/log"
 	_ "github.com/n0rad/go-erlog/register"
 	"github.com/n0rad/go-erlog/with"
@@ -11,11 +10,11 @@ import (
 func main() {
 	logger := log.GetLog("newlog") // another logger
 
-	logger.(*erlog.ErlogLogger).Appenders[0].(*erlog.ErlogWriterAppender).Out = os.Stdout
+	//	logger.(*erlog.ErlogLogger).Appenders[0].(*erlog.ErlogWriterAppender).Out = os.Stdout
 
 	path := "/toto/config"
 	if err := os.Mkdir(path, 0777); err != nil {
-		logger.FromEF(err, with.Field("dir", path)).Info("Failed to create config directory")
+		log.WithEF(err, with.Field("dir", path)).Info("Failed to create config directory")
 
 		logger.LogEntry(&log.Entry{
 			Fields:  with.Field("dir", path),

@@ -2,7 +2,7 @@ package erlog
 
 import (
 	"fmt"
-	"github.com/n0rad/go-erlog/log"
+	"github.com/n0rad/go-erlog/logs"
 	"os"
 	"strings"
 )
@@ -36,7 +36,7 @@ func NewErlogFactory() *ErlogFactory {
 	}
 }
 
-func (l *ErlogFactory) GetLog(name string) log.Log {
+func (l *ErlogFactory) GetLog(name string) logs.Log {
 	if name == "" {
 		return l.defaultLog
 	}
@@ -50,13 +50,13 @@ func (l *ErlogFactory) GetLog(name string) log.Log {
 
 type ErlogLogger struct {
 	Appenders []Appender
-	Level     log.Level
+	Level     logs.Level
 }
 
 func newLog() *ErlogLogger {
 	return &ErlogLogger{
 		Appenders: []Appender{NewErlogWriterAppender(os.Stderr)},
-		Level:     log.INFO,
+		Level:     logs.INFO,
 	}
 }
 
@@ -67,111 +67,111 @@ func (l *ErlogLogger) log(event *LogEvent) {
 }
 
 func (l *ErlogLogger) Trace(message ...string) {
-	if log.TRACE.IsEnableFor(l.Level) {
-		l.logS(log.TRACE, message...)
+	if logs.TRACE.IsEnableFor(l.Level) {
+		l.logS(logs.TRACE, message...)
 	}
 }
 
 func (l *ErlogLogger) Debug(message ...string) {
-	if log.DEBUG.IsEnableFor(l.Level) {
-		l.logS(log.DEBUG, message...)
+	if logs.DEBUG.IsEnableFor(l.Level) {
+		l.logS(logs.DEBUG, message...)
 	}
 }
 func (l *ErlogLogger) Info(message ...string) {
-	if log.INFO.IsEnableFor(l.Level) {
-		l.logS(log.INFO, message...)
+	if logs.INFO.IsEnableFor(l.Level) {
+		l.logS(logs.INFO, message...)
 	}
 }
 func (l *ErlogLogger) Warn(message ...string) {
-	if log.WARN.IsEnableFor(l.Level) {
-		l.logS(log.WARN, message...)
+	if logs.WARN.IsEnableFor(l.Level) {
+		l.logS(logs.WARN, message...)
 	}
 }
 func (l *ErlogLogger) Error(message ...string) {
-	if log.ERROR.IsEnableFor(l.Level) {
-		l.logS(log.ERROR, message...)
+	if logs.ERROR.IsEnableFor(l.Level) {
+		l.logS(logs.ERROR, message...)
 	}
 }
 func (l *ErlogLogger) Panic(message ...string) {
-	if log.PANIC.IsEnableFor(l.Level) {
-		l.logS(log.PANIC, message...)
+	if logs.PANIC.IsEnableFor(l.Level) {
+		l.logS(logs.PANIC, message...)
 	}
 	panic(strings.Join(message, " "))
 }
 func (l *ErlogLogger) Fatal(message ...string) {
-	if log.FATAL.IsEnableFor(l.Level) {
-		l.logS(log.FATAL, message...)
+	if logs.FATAL.IsEnableFor(l.Level) {
+		l.logS(logs.FATAL, message...)
 	}
 	os.Exit(1)
 }
 
 func (l *ErlogLogger) Tracef(format string, message ...interface{}) {
-	if log.TRACE.IsEnableFor(l.Level) {
-		l.logS(log.TRACE, fmt.Sprintf(format, message))
+	if logs.TRACE.IsEnableFor(l.Level) {
+		l.logS(logs.TRACE, fmt.Sprintf(format, message))
 	}
 }
 
 func (l *ErlogLogger) Debugf(format string, message ...interface{}) {
-	if log.DEBUG.IsEnableFor(l.Level) {
-		l.logS(log.DEBUG, fmt.Sprintf(format, message))
+	if logs.DEBUG.IsEnableFor(l.Level) {
+		l.logS(logs.DEBUG, fmt.Sprintf(format, message))
 	}
 }
 
 func (l *ErlogLogger) Infof(format string, message ...interface{}) {
-	if log.INFO.IsEnableFor(l.Level) {
-		l.logS(log.INFO, fmt.Sprintf(format, message))
+	if logs.INFO.IsEnableFor(l.Level) {
+		l.logS(logs.INFO, fmt.Sprintf(format, message))
 	}
 }
 
 func (l *ErlogLogger) Warnf(format string, message ...interface{}) {
-	if log.WARN.IsEnableFor(l.Level) {
-		l.logS(log.WARN, fmt.Sprintf(format, message))
+	if logs.WARN.IsEnableFor(l.Level) {
+		l.logS(logs.WARN, fmt.Sprintf(format, message))
 	}
 }
 
 func (l *ErlogLogger) Errorf(format string, message ...interface{}) {
-	if log.ERROR.IsEnableFor(l.Level) {
-		l.logS(log.ERROR, fmt.Sprintf(format, message))
+	if logs.ERROR.IsEnableFor(l.Level) {
+		l.logS(logs.ERROR, fmt.Sprintf(format, message))
 	}
 }
 
 func (l *ErlogLogger) Panicf(format string, message ...interface{}) {
-	if log.PANIC.IsEnableFor(l.Level) {
-		l.logS(log.PANIC, fmt.Sprintf(format, message))
+	if logs.PANIC.IsEnableFor(l.Level) {
+		l.logS(logs.PANIC, fmt.Sprintf(format, message))
 	}
 	panic(fmt.Sprintf(format, message))
 }
 
 func (l *ErlogLogger) Fatalf(format string, message ...interface{}) {
-	if log.FATAL.IsEnableFor(l.Level) {
-		l.logS(log.FATAL, fmt.Sprintf(format, message))
+	if logs.FATAL.IsEnableFor(l.Level) {
+		l.logS(logs.FATAL, fmt.Sprintf(format, message))
 	}
 	os.Exit(1)
 }
 
-func (l *ErlogLogger) logS(level log.Level, msg ...string) {
-	l.log(NewLogEvent(&log.Entry{Level: level, Message: strings.Join(msg, " ")}))
+func (l *ErlogLogger) logS(level logs.Level, msg ...string) {
+	l.log(NewLogEvent(&logs.Entry{Level: level, Message: strings.Join(msg, " ")}))
 }
 
-func (l *ErlogLogger) LogEntry(entry *log.Entry) {
+func (l *ErlogLogger) LogEntry(entry *logs.Entry) {
 	if entry.Level.IsEnableFor(l.Level) {
 		l.log(NewLogEvent(entry))
 	}
-	if entry.Level == log.PANIC {
+	if entry.Level == logs.PANIC {
 		panic(entry.Message)
-	} else if entry.Level == log.FATAL {
+	} else if entry.Level == logs.FATAL {
 		os.Exit(1)
 	}
 }
 
-func (l *ErlogLogger) GetLevel() log.Level      { return l.Level }
-func (l *ErlogLogger) SetLevel(level log.Level) { l.Level = level }
+func (l *ErlogLogger) GetLevel() logs.Level      { return l.Level }
+func (l *ErlogLogger) SetLevel(level logs.Level) { l.Level = level }
 
-func (l *ErlogLogger) IsTraceEnabled() bool                { return log.TRACE.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsDebugEnabled() bool                { return log.DEBUG.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsInfoEnabled() bool                 { return log.INFO.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsWarnEnabled() bool                 { return log.WARN.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsErrorEnabled() bool                { return log.ERROR.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsPanicEnabled() bool                { return log.PANIC.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsFatalEnabled() bool                { return log.FATAL.IsEnableFor(l.Level) }
-func (l *ErlogLogger) IsLevelEnabled(level log.Level) bool { return level.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsTraceEnabled() bool                { return logs.TRACE.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsDebugEnabled() bool                { return logs.DEBUG.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsInfoEnabled() bool                 { return logs.INFO.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsWarnEnabled() bool                 { return logs.WARN.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsErrorEnabled() bool                { return logs.ERROR.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsPanicEnabled() bool                { return logs.PANIC.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsFatalEnabled() bool                { return logs.FATAL.IsEnableFor(l.Level) }
+func (l *ErlogLogger) IsLevelEnabled(level logs.Level) bool { return level.IsEnableFor(l.Level) }

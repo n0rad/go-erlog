@@ -1,11 +1,11 @@
 package erlog
 
 import (
-	"github.com/n0rad/go-erlog/log"
+	"github.com/n0rad/go-erlog/logs"
 )
 
 type Appender interface {
 	Fire(event *LogEvent)
-	GetLevel() log.Level
-	SetLevel(level log.Level)
+	GetLevel() logs.Level
+	SetLevel(level logs.Level)
 }

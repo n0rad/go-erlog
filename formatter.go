@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/mgutz/ansi"
-	"github.com/n0rad/go-erlog/log"
+	"github.com/n0rad/go-erlog/logs"
 	"io"
 	"runtime"
 	"sort"
@@ -32,7 +32,7 @@ var lvlColorPanic = ansi.ColorCode(":red+h")
 
 type ErlogWriterAppender struct {
 	Out   io.Writer
-	Level log.Level
+	Level logs.Level
 	mu    sync.Mutex
 }
 
@@ -53,11 +53,11 @@ func NewErlogWriterAppender(writer io.Writer) (f *ErlogWriterAppender) {
 	}
 }
 
-func (f *ErlogWriterAppender) GetLevel() log.Level {
+func (f *ErlogWriterAppender) GetLevel() logs.Level {
 	return f.Level
 }
 
-func (f *ErlogWriterAppender) SetLevel(level log.Level) {
+func (f *ErlogWriterAppender) SetLevel(level logs.Level) {
 	f.Level = level
 }
 
@@ -125,11 +125,11 @@ func (f *ErlogWriterAppender) prepareKeys(event *LogEvent) []string {
 	return keys
 }
 
-func (f *ErlogWriterAppender) textLevel(level log.Level) string {
+func (f *ErlogWriterAppender) textLevel(level logs.Level) string {
 	levelText := strings.ToUpper(level.String())
 	switch level {
-	case log.INFO:
-	case log.WARN:
+	case logs.INFO:
+	case logs.WARN:
 		levelText = levelText[0:4]
 	default:
 		levelText = levelText[0:5]
@@ -137,46 +137,46 @@ func (f *ErlogWriterAppender) textLevel(level log.Level) string {
 	return levelText
 }
 
-func (f *ErlogWriterAppender) fileColor(level log.Level) string {
+func (f *ErlogWriterAppender) fileColor(level logs.Level) string {
 	switch level {
-	case log.DEBUG, log.INFO, log.TRACE:
+	case logs.DEBUG, logs.INFO, logs.TRACE:
 		return fileColorFail
 	default:
 		return fileColorNormal
 	}
 }
 
-func (f *ErlogWriterAppender) textColor(level log.Level) string {
+func (f *ErlogWriterAppender) textColor(level logs.Level) string {
 	switch level {
-	case log.WARN:
+	case logs.WARN:
 		return lvlColorWarn
-	case log.ERROR, log.FATAL, log.PANIC:
+	case logs.ERROR, logs.FATAL, logs.PANIC:
 		return lvlColorError
 	default:
 		return ""
 	}
 }
 
-func (f *ErlogWriterAppender) timeColor(level log.Level) func(string) string {
+func (f *ErlogWriterAppender) timeColor(level logs.Level) func(string) string {
 	switch level {
-	case log.DEBUG, log.INFO, log.TRACE:
+	case logs.DEBUG, logs.INFO, logs.TRACE:
 		return timeColorFail
 	default:
 		return timeColorNormal
 	}
 }
 
-func (f *ErlogWriterAppender) levelColor(level log.Level) string {
+func (f *ErlogWriterAppender) levelColor(level logs.Level) string {
 	switch level {
-	case log.TRACE:
+	case logs.TRACE:
 		return lvlColorTrace
-	case log.DEBUG:
+	case logs.DEBUG:
 		return lvlColorDebug
-	case log.WARN:
+	case logs.WARN:
 		return lvlColorWarn
-	case log.ERROR:
+	case logs.ERROR:
 		return lvlColorError
-	case log.FATAL, log.PANIC:
+	case logs.FATAL, logs.PANIC:
 		return lvlColorPanic
 	default:
 		return lvlColorInfo

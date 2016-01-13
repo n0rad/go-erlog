@@ -3,14 +3,15 @@ package errs
 import (
 	"bytes"
 	"fmt"
-	"github.com/n0rad/go-erlog/with"
+	"github.com/n0rad/go-erlog/data"
 	"runtime"
+"github.com/n0rad/go-erlog/data"
 )
 
 var MaxStackDepth = 50
 
 type EntryError struct {
-	Fields  with.Data
+	Fields  data.Fields
 	Message string
 	Err     error
 	stack   []uintptr
@@ -23,7 +24,7 @@ func With(message string) *EntryError {
 	})
 }
 
-func WithF(fields with.Data, msg string) *EntryError {
+func WithF(fields data.Fields, msg string) *EntryError {
 	return fill(&EntryError{
 		Fields:  fields,
 		Message: msg,
@@ -37,7 +38,7 @@ func WithE(err error, msg string) *EntryError {
 	})
 }
 
-func WithEF(err error, fields with.Data, msg string) *EntryError {
+func WithEF(err error, fields data.Fields, msg string) *EntryError {
 	return fill(&EntryError{
 		Err:     err,
 		Fields:  fields,
@@ -74,7 +75,7 @@ func Is(e1 error, e2 error) bool {
 
 //////////////////////////////////////////////
 
-func (e *EntryError) WithFields(data with.Data) *EntryError {
+func (e *EntryError) WithFields(data data.Fields) *EntryError {
 	e.Fields = data
 	return e
 }
@@ -86,9 +87,9 @@ func (e *EntryError) WithErr(err error) *EntryError {
 
 func (e *EntryError) WithField(name string, value interface{}) *EntryError {
 	if e.Fields == nil {
-		e.Fields = with.Field(name, value)
+		e.Fields = data.WithField(name, value)
 	} else {
-		e.Fields = e.Fields.With(name, value)
+		e.Fields = e.Fields.WithField(name, value)
 	}
 	return e
 }

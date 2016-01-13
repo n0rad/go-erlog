@@ -1,4 +1,4 @@
-package log
+package logs
 
 func GetDefaultLog() Log     { return factory.GetLog("") }
 func GetLog(name string) Log { return factory.GetLog(name) }

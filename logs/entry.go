@@ -1,18 +1,18 @@
-package log
+package logs
 
 import (
-	"github.com/n0rad/go-erlog/with"
+	"github.com/n0rad/go-erlog/data"
 )
 
 type Entry struct {
 	Logger  Log
 	Level   Level
-	Fields  with.Data
+	Fields  data.Fields
 	Message string
 	Err     error
 }
 
-func WithF(fields with.Data) *Entry {
+func WithF(fields data.Fields) *Entry {
 	return &Entry{
 		Logger: GetDefaultLog(),
 		Fields: fields,
@@ -26,7 +26,7 @@ func WithE(err error) *Entry {
 	}
 }
 
-func WithEF(err error, fields with.Data) *Entry {
+func WithEF(err error, fields data.Fields) *Entry {
 	return &Entry{
 		Logger: GetDefaultLog(),
 		Err:    err,
@@ -34,18 +34,30 @@ func WithEF(err error, fields with.Data) *Entry {
 	}
 }
 
+func WithField(name string, value interface{}) *Entry {
+	return &Entry{
+		Logger: GetDefaultLog(),
+		Fields: data.WithField(name, value),
+	}
+}
+
+func WithFields(fields data.Fields) *Entry {
+	return WithF(fields)
+}
+
+
 ///////////////////////////////////
 
-func (e *Entry) WithFields(data with.Data) *Entry {
+func (e *Entry) WithFields(data data.Fields) *Entry {
 	e.Fields = data
 	return e
 }
 
 func (e *Entry) WithField(name string, value interface{}) *Entry {
 	if e.Fields == nil {
-		e.Fields = with.Field(name, value)
+		e.Fields = data.WithField(name, value)
 	} else {
-		e.Fields = e.Fields.With(name, value)
+		e.Fields = e.Fields.WithField(name, value)
 	}
 	return e
 }

@@ -1,4 +1,4 @@
-package with
+package data
 
 import (
 	o "github.com/onsi/gomega"
@@ -11,8 +11,8 @@ type Options struct {
 	MaxPages int
 }
 
-func (o Options) ToFields() Data {
-	fields := make(Data, 3)
+func (o Options) ToFields() Fields {
+	fields := make(Fields, 3)
 	fields["paginate"] = o.Paginate
 	fields["count"] = o.Count
 	fields["maxpages"] = o.MaxPages
@@ -22,7 +22,7 @@ func (o Options) ToFields() Data {
 func TestWithAllInterface(t *testing.T) {
 	o.RegisterTestingT(t)
 	ops := &Options{Paginate: true, Count: 42, MaxPages: 3}
-	with := Fields(ops)
+	with := WithFields(ops)
 
 	o.Expect(with).To(o.HaveLen(3))
 	o.Expect(with["paginate"]).To(o.Equal(true))
@@ -32,15 +32,15 @@ func TestWithAllInterface(t *testing.T) {
 
 func TestWith(t *testing.T) {
 	o.RegisterTestingT(t)
-	dir := Field("dir", "there")
+	dir := WithField("dir", "there")
 
 	o.Expect(dir["dir"].(string)).To(o.Equal("there"))
 }
 
 func TestImmutable(t *testing.T) {
 	o.RegisterTestingT(t)
-	dir := Field("dir", "there")
-	other := dir.With("other", "here")
+	dir := WithField("dir", "there")
+	other := dir.WithField("other", "here")
 
 	o.Expect(dir).To(o.HaveLen(1))
 	o.Expect(other).To(o.HaveLen(2))

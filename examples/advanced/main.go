@@ -14,10 +14,10 @@ func main() {
 
 	path := "/toto/config"
 	if err := os.Mkdir(path, 0777); err != nil {
-		log.WithEF(err, with.Field("dir", path)).Info("Failed to create config directory")
+		log.WithEF(err, with.WithField("dir", path)).Info("Failed to create config directory")
 
 		logger.LogEntry(&log.Entry{
-			Fields:  with.Field("dir", path),
+			Fields:  with.WithField("dir", path),
 			Level:   log.INFO,
 			Err:     err,
 			Message: "Salut !1",

@@ -1,4 +1,4 @@
-package log
+package logs
 
 import (
 	o "github.com/onsi/gomega"

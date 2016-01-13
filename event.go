@@ -1,21 +1,21 @@
 package erlog
 
 import (
-	"github.com/n0rad/go-erlog/log"
+	"github.com/n0rad/go-erlog/logs"
 	"runtime"
 	"strings"
 	"time"
 )
 
 type LogEvent struct {
-	log.Entry
+	logs.Entry
 	Depth int
 	Time  time.Time
 	File  string
 	Line  int
 }
 
-func NewLogEvent(entry *log.Entry) *LogEvent {
+func NewLogEvent(entry *logs.Entry) *LogEvent {
 	var file string
 	var line int
 	var ok bool

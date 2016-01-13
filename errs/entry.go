@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/n0rad/go-erlog/data"
 	"runtime"
-"github.com/n0rad/go-erlog/data"
 )
 
 var MaxStackDepth = 50

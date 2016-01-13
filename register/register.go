@@ -2,9 +2,9 @@ package register
 
 import (
 	"github.com/n0rad/go-erlog"
-	"github.com/n0rad/go-erlog/log"
+	"github.com/n0rad/go-erlog/logs"
 )
 
 func init() {
-	log.RegisterLoggerFactory(erlog.NewErlogFactory())
+	logs.RegisterLoggerFactory(erlog.NewErlogFactory())
 }

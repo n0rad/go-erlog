@@ -12,25 +12,10 @@ type Entry struct {
 	Err     error
 }
 
-func WithF(fields data.Fields) *Entry {
-	return &Entry{
-		Logger: GetDefaultLog(),
-		Fields: fields,
-	}
-}
-
-func WithE(err error) *Entry {
+func WithError(err error) *Entry {
 	return &Entry{
 		Logger: GetDefaultLog(),
 		Err:    err,
-	}
-}
-
-func WithEF(err error, fields data.Fields) *Entry {
-	return &Entry{
-		Logger: GetDefaultLog(),
-		Err:    err,
-		Fields: fields,
 	}
 }
 
@@ -42,7 +27,26 @@ func WithField(name string, value interface{}) *Entry {
 }
 
 func WithFields(fields data.Fields) *Entry {
-	return WithF(fields)
+	return &Entry{
+		Logger: GetDefaultLog(),
+		Fields: fields,
+	}
+}
+
+func WithEF(err error, fields data.Fields) *Entry {
+	return &Entry{
+		Logger: GetDefaultLog(),
+		Err:    err,
+		Fields: fields,
+	}
+}
+
+func WithF(fields data.Fields) *Entry {
+	return WithFields(fields)
+}
+
+func WithE(err error) *Entry {
+	return WithError(err)
 }
 
 

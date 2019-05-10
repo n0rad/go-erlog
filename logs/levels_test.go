@@ -1,9 +1,36 @@
 package logs
 
 import (
+	"encoding/json"
 	o "github.com/onsi/gomega"
 	"testing"
 )
+
+func TestMarshalling2(t *testing.T) {
+	o.RegisterTestingT(t)
+
+	type TestStruct struct {
+		Lvl Level
+	}
+
+	testStruct := TestStruct{
+		Lvl: ERROR,
+	}
+
+	marshal, err := json.Marshal(testStruct)
+	o.Expect(err).To(o.BeNil())
+	o.Expect(marshal).To(o.BeEquivalentTo([]byte(`{"Lvl":"ERROR"}`)))
+}
+
+func TestMarshalling(t *testing.T) {
+	o.RegisterTestingT(t)
+	dd := ERROR
+
+	bytes, e := dd.MarshalJSON()
+
+	o.Expect(e).To(o.BeNil())
+	o.Expect(bytes).To(o.BeEquivalentTo([]byte("ERROR")))
+}
 
 func TestLevelStringConversion(t *testing.T) {
 	o.RegisterTestingT(t)

@@ -25,8 +25,8 @@ const (
 	TRACE
 )
 
-func (l *Level) MarshalJSON() ([]byte, error) {
-	return []byte(l.String()), nil
+func (l Level) MarshalJSON() ([]byte, error) {
+	return []byte(`"` + l.String() + `"`), nil
 }
 
 func (l *Level) UnmarshalJSON(b []byte) error {

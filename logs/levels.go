@@ -25,7 +25,11 @@ const (
 	TRACE
 )
 
-func (r *Level) UnmarshalJSON(b []byte) error {
+func (l *Level) MarshalJSON() ([]byte, error) {
+	return []byte(l.String()), nil
+}
+
+func (l *Level) UnmarshalJSON(b []byte) error {
 	var str string
 	if err := json.Unmarshal(b, &str); err != nil {
 		return err
@@ -35,12 +39,12 @@ func (r *Level) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	*r = lvl
+	*l = lvl
 	return nil
 }
 
-func (level Level) String() string {
-	switch level {
+func (l Level) String() string {
+	switch l {
 	case TRACE:
 		return "TRACE"
 	case DEBUG:

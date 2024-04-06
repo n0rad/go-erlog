@@ -251,7 +251,7 @@ func (f *ErlogWriterAppender) reduceFilePath(path string, max int) string {
 }
 
 func (f *ErlogWriterAppender) prepareKeys(fields data.Fields) []string {
-	var keys []string = make([]string, 0, len(fields))
+	var keys = make([]string, 0, len(fields))
 	for k := range fields {
 		keys = append(keys, k)
 	}

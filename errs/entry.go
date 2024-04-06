@@ -10,10 +10,10 @@ import (
 var MaxStackDepth = 50
 
 type EntryError struct {
-	Fields  data.Fields
-	Message string
-	Errs    []error
-	Stack   []uintptr
+	Fields  data.Fields `json:"fields,omitempty"`
+	Message string      `json:"message,omitempty"`
+	Errs    []error     `json:"errs,omitempty"`
+	Stack   []uintptr   `json:"-"`
 	frames  []StackFrame
 }
 
@@ -32,14 +32,14 @@ func WithF(fields data.Fields, msg string) *EntryError {
 
 func WithE(err error, msg string) *EntryError {
 	return fill(&EntryError{
-		Errs:     []error{err},
+		Errs:    []error{err},
 		Message: msg,
 	})
 }
 
 func WithEF(err error, fields data.Fields, msg string) *EntryError {
 	return fill(&EntryError{
-		Errs:     []error{err},
+		Errs:    []error{err},
 		Fields:  fields,
 		Message: msg,
 	})

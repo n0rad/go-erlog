@@ -5,11 +5,11 @@ import (
 )
 
 type Entry struct {
-	Logger  Log
-	Level   Level
-	Fields  data.Fields
-	Message string
-	Err     error
+	Logger  Log         `json:"-"`
+	Level   Level       `json:"level,omitempty"`
+	Fields  data.Fields `json:"fields,omitempty"`
+	Message string      `json:"message,omitempty"`
+	Err     error       `json:"-"`
 }
 
 func WithError(err error) *Entry {
@@ -48,7 +48,6 @@ func WithF(fields data.Fields) *Entry {
 func WithE(err error) *Entry {
 	return WithError(err)
 }
-
 
 ///////////////////////////////////
 

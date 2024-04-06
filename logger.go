@@ -13,6 +13,13 @@ type ErlogFactory struct {
 	logs       map[string]*ErlogLogger
 }
 
+func NewErlogJsonFactory() *ErlogFactory {
+	return &ErlogFactory{
+		defaultLog: newJsonLog(),
+		logs:       make(map[string]*ErlogLogger, 10),
+	}
+}
+
 func NewErlogFactory() *ErlogFactory {
 	return &ErlogFactory{
 		defaultLog: newLog(),
@@ -35,6 +42,13 @@ func (l *ErlogFactory) GetLog(name string) logs.Log {
 type ErlogLogger struct {
 	Appenders []Appender
 	Level     logs.Level
+}
+
+func newJsonLog() *ErlogLogger {
+	return &ErlogLogger{
+		Appenders: []Appender{NewJsonErlogWriterAppender(os.Stderr)},
+		Level:     logs.INFO,
+	}
 }
 
 func newLog() *ErlogLogger {

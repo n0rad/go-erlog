@@ -9,7 +9,7 @@ type Entry struct {
 	Level   Level       `json:"level,omitempty"`
 	Fields  data.Fields `json:"fields,omitempty"`
 	Message string      `json:"message,omitempty"`
-	Err     error       `json:"-"`
+	Err     error       `json:"err,omitempty"`
 }
 
 func WithError(err error) *Entry {

@@ -1,7 +1,6 @@
 package erlog
 
 import (
-	"github.com/n0rad/go-erlog/errs"
 	"github.com/n0rad/go-erlog/logs"
 	"runtime"
 	"strings"
@@ -10,11 +9,10 @@ import (
 
 type LogEvent struct {
 	logs.Entry
-	Depth int              `json:"depth,omitempty"`
-	Time  time.Time        `json:"time,omitempty"`
-	File  string           `json:"file,omitempty"`
-	Line  int              `json:"line,omitempty"`
-	Err   *errs.EntryError `json:"err,omitempty"`
+	Depth int       `json:"depth,omitempty"`
+	Time  time.Time `json:"time,omitempty"`
+	File  string    `json:"file,omitempty"`
+	Line  int       `json:"line,omitempty"`
 }
 
 func NewLogEvent(entry *logs.Entry) *LogEvent {

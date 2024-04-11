@@ -2,6 +2,7 @@ package erlog
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/n0rad/go-erlog/data"
 	"github.com/n0rad/go-erlog/errs"
 	"github.com/n0rad/go-erlog/logs"
@@ -32,11 +33,10 @@ func (f *ErlogJsonWriterAppender) SetLevel(level logs.Level) {
 
 func (f *ErlogJsonWriterAppender) Fire(event *LogEvent) {
 	event.Time = time.Now()
-	switch t := event.Entry.Err.(type) {
-	case nil:
-	case *errs.EntryError:
-		event.Err = t
-	default:
+
+	// classic string error cannot be serialized
+	var e *errs.EntryError
+	if event.Err != nil && !errors.As(event.Err, &e) {
 		event.Err = &errs.EntryError{Message: event.Err.Error()}
 	}
 

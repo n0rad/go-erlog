@@ -46,6 +46,7 @@ func (f *ErlogJsonWriterAppender) Fire(event *LogEvent) {
 			Entry: logs.Entry{
 				Message: "Failed to marshal log to json",
 				Fields:  data.WithField("message", event.Message),
+				Err:     err,
 			}})
 	}
 	f.mu.Lock()

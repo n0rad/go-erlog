@@ -3,11 +3,6 @@ package erlog
 import (
 	"bytes"
 	"fmt"
-	"github.com/mgutz/ansi"
-	"github.com/n0rad/go-erlog/data"
-	"github.com/n0rad/go-erlog/errs"
-	"github.com/n0rad/go-erlog/logs"
-	"golang.org/x/crypto/ssh/terminal"
 	"io"
 	"os"
 	"runtime"
@@ -15,6 +10,12 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/mgutz/ansi"
+	"github.com/n0rad/go-erlog/data"
+	"github.com/n0rad/go-erlog/errs"
+	"github.com/n0rad/go-erlog/logs"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var pathSkip int = 0
@@ -46,7 +47,7 @@ func init() {
 	paths := strings.Split(file, "/")
 	for i := 0; i < len(paths); i++ {
 		if paths[i] == "github.com" {
-			if paths[i-1] == "vendor" {
+			if i != 0 && paths[i-1] == "vendor" {
 				pathSkip = i - 2
 				break
 			}

@@ -1,5 +1,9 @@
 module github.com/n0rad/go-erlog
 
+go 1.24.0
+
+toolchain go1.24.4
+
 require (
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
 	github.com/onsi/gomega v1.4.2
